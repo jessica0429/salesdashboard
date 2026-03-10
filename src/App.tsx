@@ -1,18 +1,46 @@
-import { useState, useMemo } from 'react'
-import { meetings, TODAY } from '@/data/meetings'
+import { useState, useEffect, useMemo } from 'react'
 import { type MeetingRecord } from '@/data/meetings'
 import { StatCard } from '@/components/StatCard'
 import { MeetingTable } from '@/components/MeetingTable'
 import { MeetingDetailModal } from '@/components/MeetingDetailModal'
 
+const SHEETS_API_URL = import.meta.env.VITE_SHEETS_API_URL as string
+
+const TODAY = new Date().toISOString().split('T')[0]
+
 function App() {
+    const [meetings, setMeetings] = useState<MeetingRecord[]>([])
+    const [isLoading, setIsLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
     const [selectedMeeting, setSelectedMeeting] = useState<MeetingRecord | null>(null)
+
+    useEffect(() => {
+        if (!SHEETS_API_URL) {
+            setError('VITE_SHEETS_API_URL 환경변수가 설정되지 않았습니다.')
+            setIsLoading(false)
+            return
+        }
+
+        fetch(SHEETS_API_URL)
+            .then((res) => {
+                if (!res.ok) throw new Error(`HTTP ${res.status}`)
+                return res.json()
+            })
+            .then((data: MeetingRecord[]) => {
+                setMeetings(data)
+                setIsLoading(false)
+            })
+            .catch((err: Error) => {
+                setError(`데이터를 불러오지 못했어요: ${err.message}`)
+                setIsLoading(false)
+            })
+    }, [])
 
     const stats = useMemo(() => ({
         today: meetings.filter((m) => m.date === TODAY).length,
         active: meetings.filter((m) => m.stage === 'progress').length,
         followup: meetings.filter((m) => m.stage === 'followup').length,
-    }), [])
+    }), [meetings])
 
     const headerDate = new Date().toLocaleDateString('ko-KR', {
         year: 'numeric',
@@ -66,12 +94,24 @@ function App() {
                     />
                 </div>
 
-                {/* ── Meeting Log Table ── */}
-                <MeetingTable
-                    meetings={meetings}
-                    today={TODAY}
-                    onSelectMeeting={(m) => setSelectedMeeting(m)}
-                />
+                {/* ── Loading / Error / Table ── */}
+                {isLoading ? (
+                    <div className="flex flex-col items-center justify-center py-24 gap-3">
+                        <div className="w-8 h-8 border-4 border-[#4F6EF7] border-t-transparent rounded-full animate-spin" />
+                        <p className="text-[14px] text-gray-400">데이터를 불러오는 중...</p>
+                    </div>
+                ) : error ? (
+                    <div className="bg-red-50 border border-red-200 rounded-xl px-6 py-8 text-center">
+                        <p className="text-[15px] text-red-500 font-semibold mb-1">⚠️ 오류 발생</p>
+                        <p className="text-[13px] text-red-400">{error}</p>
+                    </div>
+                ) : (
+                    <MeetingTable
+                        meetings={meetings}
+                        today={TODAY}
+                        onSelectMeeting={(m) => setSelectedMeeting(m)}
+                    />
+                )}
             </main>
 
             {/* ── Detail Modal ── */}
