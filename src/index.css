@@ -1,0 +1,138 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: 0 0% 97.3%;
+    --foreground: 220 13% 9%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 13% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 9%;
+    --primary: 231 90% 63%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 9% 96%;
+    --secondary-foreground: 220 13% 9%;
+    --muted: 220 9% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 231 90% 63%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 231 90% 63%;
+    --radius: 0.75rem;
+
+    /* custom brand tokens */
+    --brand-accent: #4F6EF7;
+    --brand-accent2: #7C5CDB;
+    --brand-green: #10B981;
+    --brand-yellow: #F59E0B;
+    --brand-red: #EF4444;
+    --brand-blue: #3B82F6;
+  }
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Pretendard', 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Google Fonts: Pretendard */
+@import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap');
+
+/* ─── ANIMATIONS ─────────────────────────────── */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.22s ease;
+}
+
+/* ─── BADGE VARIANTS ─────────────────────────── */
+.badge-new {
+  background: #EFF6FF;
+  color: #3B82F6;
+}
+.badge-progress {
+  background: #ECFDF5;
+  color: #10B981;
+}
+.badge-followup {
+  background: #FFFBEB;
+  color: #D97706;
+}
+.badge-review {
+  background: #F5F3FF;
+  color: #7C5CDB;
+}
+.badge-cold {
+  background: #F3F4F6;
+  color: #9CA3AF;
+}
+
+/* ─── SCROLLBAR ──────────────────────────────── */
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(79, 110, 247, 0.25) transparent;
+}
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: rgba(79, 110, 247, 0.25);
+  border-radius: 99px;
+}
+
+/* ─── STAT CARD TOP BORDER ───────────────────── */
+.stat-card-today::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 12px 12px 0 0;
+  background: linear-gradient(90deg, #3B82F6, #4F6EF7);
+}
+.stat-card-active::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 12px 12px 0 0;
+  background: linear-gradient(90deg, #10B981, #10b981);
+}
+.stat-card-followup::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 12px 12px 0 0;
+  background: linear-gradient(90deg, #F59E0B, #f59e0b);
+}
