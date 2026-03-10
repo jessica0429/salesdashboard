@@ -35,8 +35,7 @@ export function MeetingTable({ meetings, today, onSelectMeeting }: MeetingTableP
     const filtered = useMemo(() => {
         let list = meetings
 
-        if (filter === 'today') list = list.filter((m) => m.date === today)
-        else if (filter !== 'all') list = list.filter((m) => m.stage === filter)
+        if (filter !== 'all') list = list.filter((m) => m.stage === filter)
 
         const q = search.trim().toLowerCase()
         if (q) {
